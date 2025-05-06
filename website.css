@@ -57,7 +57,7 @@
   }
 
   .meal-card {
-    width: 22%; /* Roughly 4 per row with spacing */
+    width: 22%; 
   }
 
   @media (max-width: 768px) {
