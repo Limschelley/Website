@@ -117,7 +117,7 @@
   }
   
   .meal-card button:hover {
-    background-color: #556b2f;
+    background-color: darkslategray;
   }
 
   
@@ -175,7 +175,7 @@ form button {
 }
 
 form button:hover {
-    background-color: var(--primary-hover);
+    background-color: darkslategray;
 }
 
 
