@@ -1,27 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Midterm Exam</title>
-    <link rel="stylesheet" href="website.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="website.css">
+  <title>Fresh Harvest INC</title>
+
 </head>
 <body>
-    <header>
-        <h1>Welcome to BeeHive!</h1>
-    </header>
+  <header>
+    <h1>Welcome to Fresh Harvest INC!</h1>
+  </header>
+</head>
+
+<body>
+
+  <div class="container" id="mealContainer"></div>
+
+  <form id="orderForm">
+    <h2>Order Meal</h2>
     
-    <main>
-        <section id="posts-container">
-            <!-- Posts will be inserted here by JavaScript -->
-        </section>
-    </main>
+    <div class="form-row">
+      <input type="text" id="mealName" placeholder="Meal Name" readonly required />
+      <img id="mealImage" src="" alt="Meal" />
+      <input type="number" id="quantity" placeholder="Quantity" required />
+      <input type="number" id="price" placeholder="Price" required />
+      <input type="text" id="buyerName" placeholder="Name of Buyer" required />
+      <input type="text" id="mobile" placeholder="Mobile Number" maxlength="11" required />
+    </div>
+  
+    <img id="mealImage" src="" alt="Meal" />
+  
+    <button type="submit">Submit</button>
+  </form>
+  
+  <script>
+    const mealContainer = document.getElementById('mealContainer');
+    const form = document.getElementById('orderForm');
+    const mealNameInput = document.getElementById('mealName');
+    const mealImageInput = document.getElementById('mealImage');
+    const quantityInput = document.getElementById('quantity');
+    const priceInput = document.getElementById('price');
+    const buyerNameInput = document.getElementById('buyerName');
+    const mobileInput = document.getElementById('mobile');
 
-    <footer>
-        <p>&copy; 2025 My Website</p>
-    </footer>
+    fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
+      .then(res => res.json())
+      .then(data => {
+        data.meals.forEach(meal => {
+          const card = document.createElement('div');
+          card.className = 'meal-card';
+          card.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+            <h3>${meal.strMeal}</h3>
+            <p>${meal.strCategory}</p>
+            <button onclick='orderMeal(${JSON.stringify(meal)})'>Order Item</button>
+          `;
+          mealContainer.appendChild(card);
+        });
+      });
 
-    <script src="website.js"></script>
+    function orderMeal(meal) {
+      mealNameInput.value = meal.strMeal;
+      mealImageInput.src = meal.strMealThumb;
+    }
+    form.addEventListener('submit', function (e) {
+
+      e.preventDefault();
+      const quantity = quantityInput.value.trim();
+      const price = priceInput.value.trim();
+      const name = buyerNameInput.value.trim();
+      const mobile = mobileInput.value.trim();
+
+      if (!mealNameInput.value || !mealImageInput.src || !quantity || !price || !name || !mobile) {
+        alert('All fields are required.');
+        return;
+      }
+      if (!/^\d+$/.test(quantity) || !/^\d+$/.test(price)) {
+        alert('Price and Quantity should be numeric!');
+        return;
+      }
+      if (!/^[a-zA-Z\s]+$/.test(name)) {
+        alert('Name of Buyer should only contain letters!');
+        return;
+      }
+      if (mobile.length > 11 || !/^\d+$/.test(mobile)) {
+        alert('Mobile number should only be numeric with a maximum character of 11!');
+        return;
+      }
+      alert('Order placed successfully!');
+      form.reset();
+      mealImageInput.src = '';
+    });
+  </script>
+
+  <footer> <h3>All rights reserved.</h3>
+  </footer>
 </body>
 </html>
